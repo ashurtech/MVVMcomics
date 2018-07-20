@@ -1,0 +1,80 @@
+﻿<Page
+    x:Class="MVVMcomics.Views.SeriesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    DataContext="{Binding SeriesViewModel, Source={StaticResource Locator}}"
+     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="IssueTemplate" >
+            <Grid
+                Background="Black"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image
+                    Source="{Binding Seriesimagepath}"
+                    Stretch="UniformToFill"
+                    Grid.Row="0"                    
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White" SelectionHighlightColor="Red" FontSize="16"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid
+        x:Name="ContentArea"
+        Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            x:Uid="Series_Title"
+            Style="{StaticResource PageTitleStyle}" />
+        <Grid
+            Grid.Row="1" 
+            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+            <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
+                Place your content here.-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Image x:Name="SeriesImage" Source="{x:Bind ViewModel.SelectedSeries.Seriesimagepath}" Width="300"/>
+                    <TextBlock x:Name="SeriesTitle" Text="{x:Bind ViewModel.SelectedSeries.Name}" />
+                </StackPanel>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <controls:AdaptiveGridView  Grid.Row="1" Name="AdaptiveGridViewControl"
+            IsItemClickEnabled="True"
+            SelectionMode="None"
+            ItemsSource="{x:Bind ViewModel.Source , Mode=OneWay}"
+            DesiredWidth="200"
+            ItemTemplate="{StaticResource IssueTemplate}">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="ItemClick">
+                                <ic:InvokeCommandAction Command="{x:Bind ViewModel.IssueClickCommand}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </controls:AdaptiveGridView>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
